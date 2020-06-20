@@ -40,7 +40,7 @@ snake::snake(int level){
     nodelay(stdscr,true);
     curs_set(0); 
     noecho();
-    resize_term(140,80);
+    resize_term(160,100);
     mvprintw(1,1,"C++ Project");
     border('*','*','*','*','*','*','*','*');
     refresh();
@@ -55,6 +55,9 @@ snake::snake(int level){
     wborder(play,'x','x','x','x','x','x','x','x');
     wrefresh(play);
 
+    for(int i=0;i<3;i++){
+        Rsnake.push_back(snakeBody(24+i,11));  //24 가 x좌표고 ,11이 y좌표 
+    }
     // map 할
     if(level == 1){
         mvprintw(1,20,"STAGE 1");
@@ -63,134 +66,7 @@ snake::snake(int level){
         mission_poison =1;
         mission_gate = 0;
 
-        map = new int*[y];   // row 개만큼 할당 받고, 각 row마다 col개만큼 다시 할당받는다.
-        for(int i=0;i<y;i++){
-            map[i]=new int[x];
-        }
-
-        // mapping  mwv (y,x)
-        for(int row = 0;row< y;row++){
-            for(int col = 0; col < x; col++){
-                // Wall
-                if ((row==0 && col==0) || (row== 0 && col == x-1) || (row == y-1 && col == 0)|| (row == y-1 && col == x-1)){
-                    map[row][col]=2;
-
-                }
-                // immune Wall
-                else if(row == 0 || col == 0  || col == x-1 || row ==y-1 ){
-                    map[row][col] = 1;
-                }
-                // empty space
-                else{
-                    map[row][col] = 0;
-
-                }
-            }
-        }
-    }
-
-    else if (level ==2 ){
-        mvprintw(1,20,"STAGE 2");
-
-        mission_food =5;
-        mission_poison =2;
-        mission_gate = 1;
-
-        map = new int*[y];   // row 개만큼 할당 받고, 각 row마다 col개만큼 다시 할당받는다.
-        for(int i=0;i<y;i++){
-            map[i]=new int[x];
-        }
-
-        // mapping  mwv (y,x)
-        for(int row = 0;row< y;row++){
-            for(int col = 0; col < x; col++){
-                // Wall
-                if ((row==0 && col==0) || (row== 0 && col == x-1) || (row == y-1 && col == 0)|| (row == y-1 && col == x-1)){
-                    map[row][col]=2;
-
-                }
-                // immune Wall
-                else if(row == 0 || col == 0  || col == x-1 || row ==y-1 ){
-                    map[row][col] = 1;
-                }
-                // empty space
-                else{
-                    map[row][col] = 0;
-
-                }
-            }
-        }
-    }
-    
-    else if (level ==3 ){
-        mvprintw(1,20,"STAGE 3");
-
-        mission_food =7;
-        mission_poison =3;
-        mission_gate = 1;
-
-        map = new int*[y];   // row 개만큼 할당 받고, 각 row마다 col개만큼 다시 할당받는다.
-        for(int i=0;i<y;i++){
-            map[i]=new int[x];
-        }
-
-        // mapping  mwv (y,x)
-        for(int row = 0;row< y;row++){
-            for(int col = 0; col < x; col++){
-                // Wall
-                if ((row==0 && col==0) || (row== 0 && col == x-1) || (row == y-1 && col == 0)|| (row == y-1 && col == x-1)){
-                    map[row][col]=2;
-
-                }
-                // immune Wall
-                else if(row == 0 || col == 0  || col == x-1 || row ==y-1 ){
-                    map[row][col] = 1;
-                }
-                // empty space
-                else{
-                    map[row][col] = 0;
-
-                }
-            }
-        }
-    }
-
-    else if (level == 4 ){
-        mvprintw(1,20,"STAGE 4");
-
-        mission_food =9;
-        mission_poison =4;
-        mission_gate = 2;
-
-        map = new int*[y];   // row 개만큼 할당 받고, 각 row마다 col개만큼 다시 할당받는다.
-        for(int i=0;i<y;i++){
-            map[i]=new int[x];
-        }
-
-        // mapping  mwv (y,x)
-        for(int row = 0;row< y;row++){
-            for(int col = 0; col < x; col++){
-                // Wall
-                if ((row==0 && col==0) || (row== 0 && col == x-1) || (row == y-1 && col == 0)|| (row == y-1 && col == x-1)){
-                    map[row][col]=2;
-
-                }
-                // immune Wall
-                else if(row == 0 || col == 0  || col == x-1 || row ==y-1 ){
-                    map[row][col] = 1;
-                }
-                // empty space
-                else{
-                    map[row][col] = 0;
-
-                }
-            }
-        }
-    }
-
-
-
-     // score window
+        // score window
     score = newwin(8,20,3,55);
     //  mission window
     mission = newwin(8,20,13,55);
@@ -219,6 +95,304 @@ snake::snake(int level){
     mvwprintw(mission,5,3,"G : %d (%c)",gate_cnt,mission_gate_complete);
     wborder(mission,'|','|','-','-','-','-','|','|');
     wrefresh(mission);
+        map = new int*[y];   // row 개만큼 할당 받고, 각 row마다 col개만큼 다시 할당받는다.
+        for(int i=0;i<y;i++){
+            map[i]=new int[x];
+        }
+
+        // mapping  mwv (y,x)
+        for(int row = 0;row< y;row++){
+            for(int col = 0; col < x; col++){
+                // Wall
+                if ((row==0 && col==0) || (row== 0 && col == x-1) || (row == y-1 && col == 0)|| (row == y-1 && col == x-1)){
+                    map[row][col]=2;
+
+                }
+                // immune Wall
+                else if(row == 0 || col == 0  || col == x-1 || row ==y-1 ){
+                    map[row][col] = 1;
+                }
+                // empty space
+                else{
+                    map[row][col] = 0;
+
+                }
+            }
+        }
+    }
+
+    else if (level ==2 ){
+        
+        mvprintw(1,20,"STAGE 2");
+
+        mission_food = 5;
+        mission_poison = 2;
+        mission_gate = 1;
+        //23,46
+        max_height = 27;
+        max_width = 54;
+        play = newwin(max_height,max_width,3,3);
+        getmaxyx(play,y,x);
+        wborder(play,'x','x','x','x','x','x','x','x');
+
+        // score window
+    score = newwin(8,20,3,70);
+    //  mission window
+    mission = newwin(8,20,13,70);
+    point  = 0;
+    food_cnt = 0;
+    poison_cnt = 0;
+    gate_cnt = 0;
+    mission_food_complete = ' '; // 미션 완료 표시
+    mission_poison_complete = ' '; // 미션 완료 표시 --> 조건을 충족하면 food 나 poision 쪽에서 'v'로 바꿔줄겁니다.
+    mission_gate_complete = ' ';
+    body_length = INIT_LENGTH + food_cnt - poison_cnt;
+    speed_interval = 15000;
+    current_speed = INIT_SPEED;
+
+    mvwprintw(score,1,4,"Score Board");
+    mvwprintw(score,2,3,"B : ");
+    mvwprintw(score,3,3,"+ : ");
+    mvwprintw(score,4,3,"- : ");
+    mvwprintw(score,5,3,"G : ");
+    wborder(score,'|','|','-','-','-','-','|','|');
+    wrefresh(score);
+
+    mvwprintw(mission,1,5,"Mission");
+    mvwprintw(mission,2,3,"B : ()");
+    mvwprintw(mission,3,3,"+ : %d (%c)",mission_food,mission_food_complete);
+    mvwprintw(mission,4,3,"- : %d (%c)",mission_poison,mission_poison_complete);
+    mvwprintw(mission,5,3,"G : %d (%c)",gate_cnt,mission_gate_complete);
+    wborder(mission,'|','|','-','-','-','-','|','|');
+    wrefresh(mission);
+
+        map = new int*[y];   // row 개만큼 할당 받고, 각 row마다 col개만큼 다시 할당받는다.
+        for(int i=0;i<y;i++){
+            map[i]=new int[x];
+        }
+
+        
+        for(int i=y/2-5;i<y/2+10;i++){
+        mvprintw(i,x/2+1,"|"); //30
+        }
+
+       for(int i =x/2-1-5;i<x/2+10;i++){
+            mvprintw(y/2-5,i,"_");
+        }
+        
+
+       for(int i =x/2-1-5;i<x/2+10;i++){
+            mvprintw(y/2+9,i,"-");
+        }
+        
+
+        wrefresh(play);
+
+        // 여기서 설정해도 밑에서 설정해도 map = 2; 가 잘 안먹네요ㅠㅠ  
+        for(int i=y/2-10;i<y/2+10;i++){
+        map[i][x/2+1] = 2;
+        
+        }
+   
+        // mapping  mwv (y,x)
+
+      
+        for(int row = 0;row< y;row++){
+            for(int col = 0; col < x; col++){
+                // Wall
+                if ((row==0 && col==0) || (row== 0 && col == x-1) || (row == y-1 && col == 0)|| (row == y-1 && col == x-1)){
+                    map[row][col]= 2;
+                }
+                // else if(row == y/2-5 && col ==x/2+1){
+                //     for(int j = y/2-5;j<y/2+10;j++){
+                //         map[j][col] = 2;
+                //     }
+                // } 
+                
+                // else if ((row == x/2 && col == 5) || )
+                // immune Wall
+                else if(row == 0 || col == 0  || col == x-1 || row ==y-1 ){
+                    map[row][col] = 1;
+                }
+                // empty space
+                else{
+                    map[row][col] = 0;
+
+                }
+            }
+        }
+    }
+    
+    else if (level ==3 ){
+        mvprintw(1,20,"STAGE 3");
+
+        mission_food =7;
+        mission_poison =3;
+        mission_gate = 1;
+        max_height = 27;
+        max_width = 54;
+        play = newwin(max_height,max_width,3,3);
+        getmaxyx(play,y,x);
+        wborder(play,'x','x','x','x','x','x','x','x');
+
+        // score window
+    score = newwin(8,20,3,70);
+    //  mission window
+    mission = newwin(8,20,13,70);
+    point  = 0;
+    food_cnt = 0;
+    poison_cnt = 0;
+    gate_cnt = 0;
+    mission_food_complete = ' '; // 미션 완료 표시
+    mission_poison_complete = ' '; // 미션 완료 표시 --> 조건을 충족하면 food 나 poision 쪽에서 'v'로 바꿔줄겁니다.
+    mission_gate_complete = ' ';
+    body_length = INIT_LENGTH + food_cnt - poison_cnt;
+    speed_interval = 15000;
+    current_speed = INIT_SPEED;
+
+    mvwprintw(score,1,4,"Score Board");
+    mvwprintw(score,2,3,"B : ");
+    mvwprintw(score,3,3,"+ : ");
+    mvwprintw(score,4,3,"- : ");
+    mvwprintw(score,5,3,"G : ");
+    wborder(score,'|','|','-','-','-','-','|','|');
+    wrefresh(score);
+
+    mvwprintw(mission,1,5,"Mission");
+    mvwprintw(mission,2,3,"B : ()");
+    mvwprintw(mission,3,3,"+ : %d (%c)",mission_food,mission_food_complete);
+    mvwprintw(mission,4,3,"- : %d (%c)",mission_poison,mission_poison_complete);
+    mvwprintw(mission,5,3,"G : %d (%c)",gate_cnt,mission_gate_complete);
+    wborder(mission,'|','|','-','-','-','-','|','|');
+    wrefresh(mission);
+
+        map = new int*[y];   // row 개만큼 할당 받고, 각 row마다 col개만큼 다시 할당받는다.
+        for(int i=0;i<y;i++){
+            map[i]=new int[x];
+        }
+
+        //중간 벽
+        for(int i=y/2-5;i<y/2+10;i++){
+        mvprintw(i,x/2+1,"|"); //30
+        }
+        //중간- 윗벽
+       for(int i =x/2-1-5;i<x/2+10;i++){
+            mvprintw(y/2-5,i,"_");
+        }
+         wrefresh(play);
+
+         // 벽으로(2) 설정하는 부분 필요
+        // mapping  mwv (y,x)
+        for(int row = 0;row< y;row++){
+            for(int col = 0; col < x; col++){
+                // Wall
+                if ((row==0 && col==0) || (row== 0 && col == x-1) || (row == y-1 && col == 0)|| (row == y-1 && col == x-1)){
+                    map[row][col]=2;
+
+                }
+                // immune Wall
+                else if(row == 0 || col == 0  || col == x-1 || row ==y-1 ){
+                    map[row][col] = 1;
+                }
+                // empty space
+                else{
+                    map[row][col] = 0;
+
+                }
+            }
+        }
+    }
+
+    else if (level == 4 ){
+        mvprintw(1,20,"STAGE 4");
+
+
+        max_height = 27;
+        max_width = 54;
+        play = newwin(max_height,max_width,3,3);
+        getmaxyx(play,y,x);
+        wborder(play,'x','x','x','x','x','x','x','x');
+
+        // score window
+    score = newwin(8,20,3,70);
+    //  mission window
+    mission = newwin(8,20,13,70);
+    point  = 0;
+    food_cnt = 0;
+    poison_cnt = 0;
+    gate_cnt = 0;
+    mission_food_complete = ' '; // 미션 완료 표시
+    mission_poison_complete = ' '; // 미션 완료 표시 --> 조건을 충족하면 food 나 poision 쪽에서 'v'로 바꿔줄겁니다.
+    mission_gate_complete = ' ';
+    body_length = INIT_LENGTH + food_cnt - poison_cnt;
+    speed_interval = 15000;
+    current_speed = INIT_SPEED;
+
+    mvwprintw(score,1,4,"Score Board");
+    mvwprintw(score,2,3,"B : ");
+    mvwprintw(score,3,3,"+ : ");
+    mvwprintw(score,4,3,"- : ");
+    mvwprintw(score,5,3,"G : ");
+    wborder(score,'|','|','-','-','-','-','|','|');
+    wrefresh(score);
+
+    mvwprintw(mission,1,5,"Mission");
+    mvwprintw(mission,2,3,"B : ()");
+    mvwprintw(mission,3,3,"+ : %d (%c)",mission_food,mission_food_complete);
+    mvwprintw(mission,4,3,"- : %d (%c)",mission_poison,mission_poison_complete);
+    mvwprintw(mission,5,3,"G : %d (%c)",gate_cnt,mission_gate_complete);
+    wborder(mission,'|','|','-','-','-','-','|','|');
+    wrefresh(mission);
+        mission_food =9;
+        mission_poison =4;
+        mission_gate = 2;
+
+        // 중간에 나타나는 벽 
+        for(int i=y/2-5;i<y/2+10;i++){
+        mvprintw(i,x/2+1,"|"); //30
+        }
+        // 중간 - 윗벽
+       for(int i =x/2-1-5;i<x/2+10;i++){
+            mvprintw(y/2-5,i,"_");
+        }
+        
+        // 중간 - 아랫벽
+       for(int i =x/2-1-5;i<x/2+10;i++){
+            mvprintw(y/2+9,i,"-");
+        }
+        
+
+        wrefresh(play);
+
+        map = new int*[y];   // row 개만큼 할당 받고, 각 row마다 col개만큼 다시 할당받는다.
+        for(int i=0;i<y;i++){
+            map[i]=new int[x];
+        }
+
+        // mapping  mwv (y,x)
+        for(int row = 0;row< y;row++){
+            for(int col = 0; col < x; col++){
+                // Wall
+                if ((row==0 && col==0) || (row== 0 && col == x-1) || (row == y-1 && col == 0)|| (row == y-1 && col == x-1)){
+                    map[row][col]=2;
+
+                }
+                // immune Wall
+                else if(row == 0 || col == 0  || col == x-1 || row ==y-1 ){
+                    map[row][col] = 1;
+                }
+                // empty space
+                else{
+                    map[row][col] = 0;
+
+                }
+            }
+        }
+    }
+
+
+
+     
 
   
 
@@ -236,9 +410,9 @@ snake::snake(int level){
 
 //seg fault
 // snake의 시작점 , 뱀 본체 준비
-for(int i=0;i<3;i++){
-        Rsnake.push_back(snakeBody(24+i,11));  //24 가 x좌표고 ,11이 y좌표 
-    }
+// for(int i=0;i<3;i++){
+//         Rsnake.push_back(snakeBody(24+i,11));  //24 가 x좌표고 ,11이 y좌표 
+//     }
 
 // 맵에 뱀을 그리는 과정
 for(int i=0;i<Rsnake.size();i++){
